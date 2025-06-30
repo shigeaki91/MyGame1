@@ -129,12 +129,12 @@ TextureImporter:
       name: dotpict 31_0
       rect:
         serializedVersion: 2
-        x: 25
+        x: 30
         y: 1
-        width: 64
+        width: 76
         height: 126
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.355, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
