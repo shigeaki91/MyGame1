@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 2271664485113663945}
   - component: {fileID: 142133015748633900}
   - component: {fileID: 6083216969234159226}
-  m_Layer: 6
-  m_Name: RightArrow
+  m_Layer: 7
+  m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,3 +149,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   direction: {x: 1, y: 0}
+  timer: 0
