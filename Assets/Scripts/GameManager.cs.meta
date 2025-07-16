@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+guid: 27673bd318fa2ff439097f58bf1113e2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - BowSoundClip: {fileID: 8300000, guid: 0aaf1c489c76e5a45af522aaada468b3, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

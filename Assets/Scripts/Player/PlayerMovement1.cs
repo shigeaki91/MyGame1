@@ -5,11 +5,12 @@ public class PlayerMovement1 : MonoBehaviour
     [SerializeField] Sprite Stand;
     [SerializeField] Sprite Walk1;
     [SerializeField] Sprite Walk2;
+    [SerializeField] Sprite Step;
     [SerializeField] Sprite Jump;
     [SerializeField] Sprite Up;
-    [SerializeField] Sprite Down1;
-    [SerializeField] Sprite Down2;
-    [SerializeField] Sprite Down3;
+    [SerializeField] Sprite Air;
+    [SerializeField] Sprite Down;
+    [SerializeField] Sprite Land;
     [SerializeField] Sprite ChargeStand1;
     [SerializeField] Sprite ChargeWalk1;
     [SerializeField] Sprite ChargeJump1;
@@ -22,6 +23,9 @@ public class PlayerMovement1 : MonoBehaviour
     [SerializeField] Sprite ShootStand;
     [SerializeField] Sprite ShootWalk;
     [SerializeField] GameObject Arrow;
+    [SerializeField] AudioSource BowAudioSource;
+    [SerializeField] AudioClip drawSound;
+    [SerializeField] AudioClip shootSound;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
     private bool isMoving = false;
@@ -43,12 +47,16 @@ public class PlayerMovement1 : MonoBehaviour
     public float chargeTimer = 0f;
     public float shootTimer = 0f;
     public float span = 0.15f;
-    
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        BowAudioSource = GetComponent<AudioSource>();
+        BowAudioSource.clip = drawSound;
+        BowAudioSource.loop = false;
+        BowAudioSource.volume = 0.3f;
     }
     void Update()
     {
@@ -89,6 +97,13 @@ public class PlayerMovement1 : MonoBehaviour
 
 
         //弓
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            BowAudioSource.pitch = Random.Range(1.8f, 2.2f);
+            BowAudioSource.Play();
+            Debug.Log("Play called");
+
+        }
         if (Input.GetKey(KeyCode.Z) && !isShooting)
         {
             isCharging = true;
@@ -97,16 +112,20 @@ public class PlayerMovement1 : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Z))
         {
             isCharging = false;
+            BowAudioSource.Stop();
+            Debug.Log("Stop called");
             if (chargeTimer >= chargeSpan)
             {
                 isShooting = true;
+                BowAudioSource.pitch = 1f;
+                BowAudioSource.PlayOneShot(shootSound);
                 if (lookRight)
                 {
                     Instantiate(Arrow, transform.position + Vector3.right * transform.localScale.x * 0.35f, Quaternion.identity);
                 }
                 else
                 {
-                    Instantiate(Arrow, transform.position + Vector3.left * transform.localScale.x * -0.35f, Quaternion.Euler(0f, 0f, 180f));
+                    Instantiate(Arrow, transform.position + Vector3.left * transform.localScale.x * -0.35f, Quaternion.Euler(0f, 0f, -180f));
                 }
             }
             else
@@ -192,7 +211,7 @@ public class PlayerMovement1 : MonoBehaviour
 
         //上昇、下降判定
         if (downTimer >= span) downTimer = 0f;
-        if (rb.linearVelocity.y < -2f)
+        if (rb.linearVelocity.y < -3f)
         {
             downTimer += Time.deltaTime;
             down = true;
@@ -202,9 +221,7 @@ public class PlayerMovement1 : MonoBehaviour
             downTimer = 0f;
             down = false;
         }
-
-        if (upTimer >= span) upTimer = 0f;
-        if (rb.linearVelocity.y > 0.2f)
+        if (rb.linearVelocity.y > 1f)
         {
             upTimer += Time.deltaTime;
             up = true;
@@ -321,21 +338,32 @@ public class PlayerMovement1 : MonoBehaviour
                     }
                 }
             }
-            
+
         if (!isGround)
         {
-            
-            if (up)
+            if (!isShooting)
             {
-                if (upTimer <= 0.1f)
+                if (up)
                 {
-                    sr.sprite = Jump;
+                    if (upTimer <= 0.1f)
+                    {
+                        sr.sprite = Jump;
+                    }
+                    else
+                    {
+                        sr.sprite = Up;
+                    }
+                }
+                else if (down)
+                {
+                    sr.sprite = Down;
                 }
                 else
                 {
-                    sr.sprite = Up;
+                    sr.sprite = Air;
                 }
-                if (isCharging)
+            }
+            if (isCharging)
                 {
                     if (chargeTimer <= chargeSpan * 0.5f)
                     {
@@ -350,22 +378,6 @@ public class PlayerMovement1 : MonoBehaviour
                         sr.sprite = ChargeJump3;
                     }
                 }
-            }
-            if (down && !isCharging && !isShooting)
-            {
-                if (0f < downTimer && downTimer <= span * 0.25f || span * 0.5f < downTimer && downTimer <= span * 0.75f)
-                {
-                    sr.sprite = Down1;
-                }
-                else if (span * 0.25f < downTimer && downTimer <= span * 0.5f)
-                {
-                    sr.sprite = Down2;
-                }
-                else
-                {
-                    sr.sprite = Down3;
-                }
-            }
         }
     }
 }
